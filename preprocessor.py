@@ -1,5 +1,4 @@
 
-
 # preprocessor.py
 
 # Preprocessing steps for RNN & CNN
@@ -550,6 +549,64 @@ def scatterplot_VOC(x, y, number_of_R, threshold):
     plt.legend(handles=[R_points, N_points, threshline], loc="best")
     plt.xlabel('VOC #')
     plt.ylabel('Predictions')
+
+
+def add_category(text22):
+    # Look for keywords in text that indicate issue category and input 1 (yes) for that category
+    # vectorize this function on consolidated text (Title + Content) prior to text cleaning steps
+
+    # 20221107 For now, add only 5 major categories that comprise top 10 issue category in raw data:
+    # 3rd Party, Display, Battery, HW, Camera, Notification, Connectivity, Messages, Biometrics, Audio, Bluetooth
+            # note that Biometrics is mostly watch issues & Audio is mostly buds issues
+            # Checked each word from raw data file & only added if several rows existed
+
+    thirdparty_list = ['facebook', 'snapchat', 'youtube', 'instagram', 'reddit', 'amazon prime', 'cod',
+                        'fb', 'spotify', 'netflix', 'zoom', 'discord', 'tik', 'whatsapp', 'twitter',
+                        'genshin', 'game', 'dropbox', 'onedrive', 'twitch']
+    display_list = ['display', 'screen', 'crack', 'scratch', 'protector', 'hz', 'scroll', 'touch', 'hdr',
+                    'refresh rate', 'flicker', 'pixel', 'burn-in', 'burn in', 'tint', 'jump']
+    battery_list = ['SoT', 'battery', 'usage', 'consum', 'drain', 'lasts', 'lasting', 'dies']
+    camera_list = ['camera', 'shot', 'focus', 'blur', 'astrophotography', 'photo', 'video', 'saturat',
+                    'shutter', 'selfie', 'record', 'lens', 'ultrawide', 'ultra wide', 'flash', 'slow-mo']
+    noti_list = ['notif', 'vibrat', 'incoming', 'pop-up']
+    connect_list = ['connect','network','mobile data','hotspot','esim','sim card','5g','4g','3g',
+                    'signal', 'speed', 'internet', 'cellular', 'dual', 'reception', 'coverage']
+        # 'data', 'service', 'sim' might catch wrong VOC
+    messages_list = ['text', 'messag', 'whatsapp', 'RCS', 'MMS', 'chat', 'send', 'WhatsApp']
+
+
+    text22['thirdparty'] = text22['Text'].str.contains('|'.join(thirdparty_list), case=False)
+    text22['display'] = text22['Text'].str.contains('|'.join(display_list), case=False)
+    text22['battery'] = text22['Text'].str.contains('|'.join(battery_list), case=False)
+    # add for HW (what are S22 HW topics that span 70+% of S22 HW VOC?)
+    text22['camera'] = text22['Text'].str.contains('|'.join(camera_list), case=False)
+    text22['notification'] = text22['Text'].str.contains('|'.join(noti_list), case=False)
+    text22['connectivity'] = text22['Text'].str.contains('|'.join(connect_list), case=False)
+    text22['messages'] = text22['Text'].str.contains('|'.join(messages_list), case=False)
+    
+    # consider other categories of issues that S22 frequently suffer & topics that are discussed about S22
+
+
+
+    # Should check whether each category contains a good chunk of healthily distributed R & N VOC
+        # For each category, isolate all the 'True' rows & count up R & N
+        # Use the category for CART if a good chunk of S22 is accurately represented with the keywords
+            # assigned for that category. Also keep it even for small chunk, if it helps seclude tricky
+            # VOC's and make the rest of the data more "pure" of outlier patterns
+                # ex: if biometrics issues for S22 largely occur post-update, it'll help remove update-
+                # related VOCs, which exhibit strong, temporary pattern. Can check correlation between
+                # biometrics and updates as well, using PCA... there's no end to how complex I can go...
+    # To improve quality of this data, I should manually determine the category of each VOC instead of
+        # categorizing by the words that are mentioned. This will take FOREVER but will lend better data
+            # Keep in mind I have to re-open all of old Reddit VOC to record the "flair" of each S22 user
+            # Since I'm doing quick concept test for now, just go with keywords mentioned
+    # Other than major categories, also super worth categorizing by update/non-update
+        # this will help better predict issues around update release times
+
+
+    return text22
+
+
 
 
 
