@@ -24,6 +24,7 @@ import os
 from sklearn.metrics import roc_curve, auc
 from sklearn.metrics import roc_auc_score
 from sklearn.metrics import precision_score, recall_score
+from sklearn.metrics import confusion_matrix, ConfusionMatrixDisplay
 
 
 # https://towardsdatascience.com/an-easy-tutorial-about-sentiment-analysis-with-deep-learning-and-keras-2bf52b9cba91
@@ -656,9 +657,10 @@ def shift_values_over(df22, index):
 # ============================================================================================================= 9
 
 
-def ROC_AUC(y_test, y_score):
+def ROC_AUC(y_test, y_score, fpr_tpr=None):
     # Creates an ROC curve & computes AUC of the test data based on how it performs on the trained model
     # Also calculates precision, recall & accuracy, and plots the position on ROC based on performance
+    # y_test, y_score, tp_fp need to be lists
 
     # Create ROC curve and compute AUC
     fpr, tpr, thresholds = roc_curve(y_test[:], y_score[:], pos_label=1)    # 'thresholds' go in '_'
@@ -674,6 +676,8 @@ def ROC_AUC(y_test, y_score):
     plt.plot(fpr, tpr, color="darkorange",
         lw=lw, label="ROC curve (area = %0.2f)" % roc_auc,)
     plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
+    if fpr_tpr is not None:
+        plt.plot(fpr_tpr[0], fpr_tpr[1], color="green", marker='x')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
     plt.xlabel("False Positive Rate")
@@ -683,6 +687,18 @@ def ROC_AUC(y_test, y_score):
     plt.show()
 
     # Need to polish this
+
+
+
+def confusion_matrix_display(y_test, y_pred):
+    tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
+
+    cm = confusion_matrix(y_test, y_pred)     # labels=clf.classes_
+    disp = ConfusionMatrixDisplay(confusion_matrix = cm)     # display_labels=clf.classes_
+    disp.plot()
+    plt.show()
+    return tn, fp, fn, tp
+
 
 
 def prec_rec_accu():
