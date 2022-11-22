@@ -19,6 +19,11 @@ from nltk.stem import WordNetLemmatizer
 from nltk.stem import SnowballStemmer     # based on The Porter Stemming Algorithm
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+from datetime import datetime, timedelta
+import os
+from sklearn.metrics import roc_curve, auc
+from sklearn.metrics import roc_auc_score
+from sklearn.metrics import precision_score, recall_score
 
 
 # https://towardsdatascience.com/an-easy-tutorial-about-sentiment-analysis-with-deep-learning-and-keras-2bf52b9cba91
@@ -42,7 +47,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 
 # ============================================================================================================= 0                 <- add a preliminary stopword removal step
 
-def data_split(df22):
+def data_split(df22, R_known=True):
 
     # Split the input dataframe into Text (Title + Contents) and Classes dataframes
     # input must have 3 columns of string entries (Title, Contents, and Classes)
@@ -54,17 +59,25 @@ def data_split(df22):
     # print(df22.applymap(lambda x : type(x).__name__).eq({'Title': 'str', 'Content': 'str', 'Class':'str'}))
 
     # convert NaN to empty strings (NaN -> str)
-    df22 = df22.replace(np.nan, '', regex=True)
+        # df22.apply(str) converts all columns to str, as well
+    df22 = df22.replace(float('nan'), '', regex=True)
 
     # concatenate strings of title & content with a " " in between (1 body of text)
-    text22 = df22.iloc[:,0] + " " + df22.iloc[:,1]      # slicing DataFrame makes it a Series
+    text22 = df22['Title'] + " " + df22['Content']      # slicing DataFrame via .iloc[:,0] makes it a Series
     text22 = pd.DataFrame(text22, columns= ['Text'])    # so initialize it as a DataFrame. pd.DataFrame(some_Series) works
-    classes22 = df22.iloc[:,2]
+    classes22 = df22['Class']
 
-    classes22 = classes22.replace(to_replace="R", value=1)
-    classes22 = classes22.replace(to_replace="r", value=1)
-    classes22 = classes22.replace(to_replace="N", value=0)
-    classes22 = classes22.replace(to_replace="n", value=0)
+    if R_known == True:
+    # R, r, YR = 1;     N, n, YN = 0
+        R_cases = re.compile('R|YR', re.IGNORECASE)
+        N_cases = re.compile('N|YN', re.IGNORECASE)
+        classes22 = classes22.replace(to_replace=R_cases, value=1)
+        classes22 = classes22.replace(to_replace=N_cases, value=0)
+    else:
+        # R_known == False; prepping not yet classified data
+        Y_N_cases = re.compile('Y|N', re.IGNORECASE)
+        classes22 = classes22.replace(to_replace=Y_N_cases, value=0)     # all N's for simplicity
+
     classes22 = pd.DataFrame(classes22, columns=['Class']).astype('int32')
     # classes22.columns = ['Class']    # classes22=pd.DataFrame(classes22) causes an error cus   pd.DataFrame(some_DataFrame) makes no sense - should pass a list
 
@@ -531,12 +544,18 @@ def semantic_similarity(X_train):
                     bbox=dict(boxstyle='round, pad=0.2', fc='yellow', alpha=0.1))
 
 
+
+# ============================================================================================================= 9
+
+
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
-def scatterplot_VOC(x, y, number_of_R, threshold):
+def scatterplot_VOC(x, y, number_of_R, threshold, filename, directory):
     # x = array of len(y)                      y = array of prediction probabilities
     # number_of_R = number of actual R + 1     threshold = prediction threshold in float
+    plt.figure()
+    plt.title(f'{filename[10:-4]}')     # test_data/test_1012.csv --> test_1012
     plt.scatter(x, y_prob3, c=(np.where(x<number_of_R+1,'g', 'r')))      # plots VOC (R & N)
     plt.plot([0, len(y)],[threshold, threshold], c='k', linestyle='--')  # plots threshold
 
@@ -549,6 +568,13 @@ def scatterplot_VOC(x, y, number_of_R, threshold):
     plt.legend(handles=[R_points, N_points, threshline], loc="best")
     plt.xlabel('VOC #')
     plt.ylabel('Predictions')
+
+    f = os.path.join(directory, filename[10:-4])
+    plt.savefig(f'{f}.png')
+
+
+
+# ============================================================================================================= 9
 
 
 def add_category(text22):
@@ -607,6 +633,66 @@ def add_category(text22):
     return text22
 
 
+
+
+# ============================================================================================================= 9
+
+
+def shift_values_over(df22, index):
+    # Shift columns of values over to the right by one unit from 2nd column
+    # Takes DataFrame index object like below:
+    # df22[df22.Class.apply(lambda x: x == 'None')].index
+
+    shift_rows = df22.loc[index]   # rows where columns shifted to left
+    shift_values = shift_rows[df22.columns[1:-1]]
+    shift_rows[df22.columns[2:]] = shift_rows[df22.columns[1:-1]]
+    shift_rows.Content = ''
+    df22.loc[df22[df22.Class.apply(lambda x: x == 'None')].index] = shift_rows
+    
+    return df22
+
+
+
+# ============================================================================================================= 9
+
+
+def ROC_AUC(y_test, y_score):
+    # Creates an ROC curve & computes AUC of the test data based on how it performs on the trained model
+    # Also calculates precision, recall & accuracy, and plots the position on ROC based on performance
+
+    # Create ROC curve and compute AUC
+    fpr, tpr, thresholds = roc_curve(y_test[:], y_score[:], pos_label=1)    # 'thresholds' go in '_'
+    roc_auc = auc(fpr, tpr)
+    #print('fpr is', fpr)
+    #print('tpr is', tpr)
+    #print('thresholds', thresholds)
+    print('AUC : ', roc_auc)
+
+    # ROC curve
+    plt.figure()
+    lw = 2
+    plt.plot(fpr, tpr, color="darkorange",
+        lw=lw, label="ROC curve (area = %0.2f)" % roc_auc,)
+    plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
+    plt.xlim([0.0, 1.0])
+    plt.ylim([0.0, 1.05])
+    plt.xlabel("False Positive Rate")
+    plt.ylabel("True Positive Rate")
+    plt.title("ROC(Receiver operating characteristic) Curve")
+    plt.legend(loc="lower right")
+    plt.show()
+
+    # Need to polish this
+
+
+def prec_rec_accu():
+
+    precision3 = precision_score(classes3, y_pred3)
+    recall3 = recall_score(classes3, y_pred3)
+    print('For test data: ')
+    print('Precision: {} / Recall: {} / Accuracy: {}'.format(
+        round(precision3, 3), round(recall3, 3), round((y_pred3==classes3.Class).sum()/len(y_pred3), 3)))
+    
 
 
 
