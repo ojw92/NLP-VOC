@@ -677,7 +677,7 @@ def ROC_AUC(y_test, y_score, fpr_tpr=None):
         lw=lw, label="ROC curve (area = %0.2f)" % roc_auc,)
     plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
     if fpr_tpr is not None:
-        plt.plot(fpr_tpr[0], fpr_tpr[1], color="green", marker='x')
+        plt.plot(fpr_tpr[0], fpr_tpr[1], color="green", lw = 3, marker='x')
     plt.xlim([0.0, 1.0])
     plt.ylim([0.0, 1.05])
     plt.xlabel("False Positive Rate")
@@ -701,13 +701,14 @@ def confusion_matrix_display(y_test, y_pred):
 
 
 
-def prec_rec_accu():
+def prec_rec_accu(y_test, y_pred):
+    # y_test & y_pred need to be 1-D arrays
 
-    precision3 = precision_score(classes3, y_pred3)
-    recall3 = recall_score(classes3, y_pred3)
+    precision3 = precision_score(y_test, y_pred)
+    recall3 = recall_score(y_test, y_pred)
     print('For test data: ')
     print('Precision: {} / Recall: {} / Accuracy: {}'.format(
-        round(precision3, 3), round(recall3, 3), round((y_pred3==classes3.Class).sum()/len(y_pred3), 3)))
+        round(precision3, 3), round(recall3, 3), round((y_pred3==y_test.Class).sum()/len(y_pred3), 3)))
     
 
 
