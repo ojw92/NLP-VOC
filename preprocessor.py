@@ -556,7 +556,7 @@ def scatterplot_VOC(x, y, number_of_R, threshold, filename, directory):
     # x = array of len(y)                      y = array of prediction probabilities
     # number_of_R = number of actual R + 1     threshold = prediction threshold in float
     plt.figure()
-    plt.title(f'{filename[10:-4]}')     # test_data/test_1012.csv --> test_1012
+    plt.title(f'{filename[10:-4]} Scatter Plot')     # test_data/test_1012.csv --> test_1012
     plt.scatter(x, y_prob3, c=(np.where(x<number_of_R+1,'g', 'r')))      # plots VOC (R & N)
     plt.plot([0, len(y)],[threshold, threshold], c='k', linestyle='--')  # plots threshold
 
@@ -571,7 +571,7 @@ def scatterplot_VOC(x, y, number_of_R, threshold, filename, directory):
     plt.ylabel('Predictions')
 
     f = os.path.join(directory, filename[10:-4])
-    plt.savefig(f'{f}.png')
+    plt.savefig(f'{f}-scatter.png')
 
 
 
@@ -657,7 +657,7 @@ def shift_values_over(df22, index):
 # ============================================================================================================= 9
 
 
-def ROC_AUC(y_test, y_score, fpr_tpr=None):
+def ROC_AUC(y_test, y_score, fpr_tpr=None, filename, directory):
     # Creates an ROC curve & computes AUC of the test data based on how it performs on the trained model
     # Also calculates precision, recall & accuracy, and plots the position on ROC based on performance
     # y_test, y_score, tp_fp need to be lists
@@ -682,21 +682,32 @@ def ROC_AUC(y_test, y_score, fpr_tpr=None):
     plt.ylim([0.0, 1.05])
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
-    plt.title("ROC(Receiver operating characteristic) Curve")
+    plt.title(f'{filename[10:-4]} ROC Curve')     # test_data/test_1012.csv --> test_1012
     plt.legend(loc="lower right")
     plt.show()
+
+    # save plot to directory
+    f = os.path.join(directory, filename[10:-4])
+    plt.savefig(f'{f}-roc.png')
 
     # Need to polish this
 
 
 
 def confusion_matrix_display(y_test, y_pred):
+    # inputs: actual labels & prediction labels
     tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 
     cm = confusion_matrix(y_test, y_pred)     # labels=clf.classes_
     disp = ConfusionMatrixDisplay(confusion_matrix = cm)     # display_labels=clf.classes_
     disp.plot()
+    plt.title(f'{filename[10:-4]} Confusion Matrix')     # test_data/test_1012.csv --> test_1012
     plt.show()
+
+    # save plot to directory
+    f = os.path.join(directory, filename[10:-4])
+    plt.savefig(f'{f}-confmat.png')
+
     return tn, fp, fn, tp
 
 
@@ -706,9 +717,12 @@ def prec_rec_accu(y_test, y_pred):
 
     precision3 = precision_score(y_test, y_pred)
     recall3 = recall_score(y_test, y_pred)
+    accuracy3 = (y_pred3==y_test.Class).sum()/len(y_pred3)
     print('For test data: ')
     print('Precision: {} / Recall: {} / Accuracy: {}'.format(
-        round(precision3, 3), round(recall3, 3), round((y_pred3==y_test.Class).sum()/len(y_pred3), 3)))
+        round(precision3, 3), round(recall3, 3), round(accuracy3, 3)))
+    
+    return precision3, recall3, accuracy3
     
 
 
