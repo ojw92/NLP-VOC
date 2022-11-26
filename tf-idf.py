@@ -24,20 +24,22 @@ seed = 5
 np.random.seed(seed)
 tf.random.set_seed(seed)    # Each library has its own rng so need to declare it separately for each
 
-# Upload dataset in 4 parts
-df22_1 = pd.read_csv('20221011pre1.csv', sep='\t')
-df22_2 = pd.read_csv('20221011pre2.csv', sep='\t') 
-df22_3 = pd.read_csv('20221011pre3.csv', sep='\t') 
-df22_4 = pd.read_csv('20221011pre4.csv', sep='\t') 
 
-# Found 2 rows where values are shifted to adjacent column; re-assign the values
-df22_1.Class.iloc[2736] = df22_1.Content.iloc[2736]
-df22_1.Content.iloc[2736] = ''
-df22_3.Class.iloc[427] = df22_3.Content.iloc[427]
-df22_3.Content.iloc[427] = ''
+# Upload dataset
+df22 = pd.read_csv('S22_train20221011.csv', sep='\t', index_col=0).drop_duplicates()
 
-# Remove duplicate entries and concatenate the DataFrames
-df22 = pd.concat([df22_1, df22_2, df22_3, df22_4], ignore_index=True).drop_duplicates()
+# Fix rows where values are shifted by 1 column
+shift_rows = df22.loc[df22[df22.Class.apply(lambda x: x == 'None')].index]   # rows where columns shifted to left
+shift_values = shift_rows[df22.columns[1:-1]]
+shift_rows[df22.columns[2:]] = shift_rows[df22.columns[1:-1]]
+shift_rows.Content = ''
+df22.loc[df22[df22.Class.apply(lambda x: x == 'None')].index] = shift_rows
+
+# Filter training data to desired dates
+df22 = df22[df22.Date.apply(lambda x: datetime.strptime(x,'%m/%d/%Y %H:%M').date() > datetime(2022,2,21).date())]
+
+# For class imbalance, use roughly same ratio of R & N
+df22 = pd.concat([df22[df22.Class=='R'], df22[df22.Class=='N'].iloc[::4, :]])
 df22 = df22.sample(frac=1, random_state=seed)     # shuffle the order so R's are not all at the top
 
 # Use the predefined preprocessing steps to clean up the text
