@@ -96,26 +96,9 @@ print('prediction probability:', proba.shape)
 print('AUC score from logistic regression: ', roc_auc_score(y_test, y_score))
 
 # Create ROC curve and compute AUC
-fpr, tpr, thresholds = roc_curve(y_test[:], y_score[:], pos_label=1)    # 'thresholds' go in '_'
-roc_auc = auc(fpr, tpr)
-print('fpr is', fpr)
-print('tpr is', tpr)
-print('thresholds', thresholds)
-print('also auc is', roc_auc)
-
-# ROC curve
-plt.figure()
-lw = 2
-plt.plot(fpr, tpr, color="darkorange",
-    lw=lw, label="ROC curve (area = %0.2f)" % roc_auc,)
-plt.plot([0, 1], [0, 1], color="navy", lw=lw, linestyle="--")
-plt.xlim([0.0, 1.0])
-plt.ylim([0.0, 1.05])
-plt.xlabel("False Positive Rate")
-plt.ylabel("True Positive Rate")
-plt.title("ROC(Receiver operating characteristic) Curve")
-plt.legend(loc="lower right")
-plt.show()
+tn, fp, fn, tp = confusion_matrix_display(y_test, pred)
+fpr_tpr = [fp/(fp+tn), tp/(tp+fn)]
+ROC_AUC(y_test, y_score, fpr_tpr)
 
 feature_names = np.array(vect.get_feature_names_out())
 
@@ -143,13 +126,33 @@ print('Number of features for each n-gram:', num_feat)
 print('AUC scores for each n-gram:', auc_scores)
 print('Example prediction outcome for each n-gram:', ex_pred)
 
+
 # =========================================================================================================
-"""
-"""
+
 # test out accuracy on VOC data here!
 
 
 
+test_files = []
+directory = 'test_data'
+for filename in sorted(os.listdir(directory)):
+    f = os.path.join(directory, filename)
+    # checking if it is a file
+    if os.path.isfile(f):
+        test_files.append(f)
+
+# for saving figures
+img_dir = './figures_NtoR_3.84/'
+if not os.path.exists(img_dir):
+    os.mkdir(img_dir)
+
+# =========== Test parameters ==========
+
+thresh=0.40
+df_voc = pd.DataFrame()
+pra = ['For min_df = %d, thresh = %.2f' %(min_df, thresh)]   # record precision, recall & accuracy of each run
+
+# =========== Test parameters ==========
 
 
 df3 = pd.read_csv('20221017.csv', sep='\t')    # import 20221013 issues
