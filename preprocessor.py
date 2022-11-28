@@ -552,10 +552,12 @@ def semantic_similarity(X_train):
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from matplotlib.lines import Line2D
-def scatterplot_VOC(x, y, number_of_R, threshold, filename, directory):
+def scatterplot_VOC(x, y, number_of_R, threshold, filename=None, directory=None):
     # x = array of len(y)                      y = array of prediction probabilities
     # number_of_R = number of actual R + 1     threshold = prediction threshold in float
     plt.figure()
+    if filename is None:
+        filename = ""
     plt.title(f'{filename[10:-4]} Scatter Plot')     # test_data/test_1012.csv --> test_1012
     plt.scatter(x, y_prob3, c=(np.where(x<number_of_R+1,'g', 'r')))      # plots VOC (R & N)
     plt.plot([0, len(y)],[threshold, threshold], c='k', linestyle='--')  # plots threshold
@@ -570,8 +572,9 @@ def scatterplot_VOC(x, y, number_of_R, threshold, filename, directory):
     plt.xlabel('VOC #')
     plt.ylabel('Predictions')
 
-    f = os.path.join(directory, filename[10:-4])
-    plt.savefig(f'{f}-scatter.png')
+    if directory is not None:
+        f = os.path.join(directory, filename[10:-4])
+        plt.savefig(f'{f}-scatter.png')
 
 
 
@@ -657,7 +660,7 @@ def shift_values_over(df22, index):
 # ============================================================================================================= 9
 
 
-def ROC_AUC(y_test, y_score, fpr_tpr=None, filename, directory):
+def ROC_AUC(y_test, y_score, fpr_tpr=None, filename=None, directory=None):
     # Creates an ROC curve & computes AUC of the test data based on how it performs on the trained model
     # Also calculates precision, recall & accuracy, and plots the position on ROC based on performance
     # y_test, y_score, tp_fp need to be lists
@@ -682,31 +685,37 @@ def ROC_AUC(y_test, y_score, fpr_tpr=None, filename, directory):
     plt.ylim([0.0, 1.05])
     plt.xlabel("False Positive Rate")
     plt.ylabel("True Positive Rate")
+    if filename is None:
+        filename = ""
     plt.title(f'{filename[10:-4]} ROC Curve')     # test_data/test_1012.csv --> test_1012
     plt.legend(loc="lower right")
     plt.show()
 
-    # save plot to directory
-    f = os.path.join(directory, filename[10:-4])
-    plt.savefig(f'{f}-roc.png')
+    if directory is not None:
+        # save plot to directory
+        f = os.path.join(directory, filename[10:-4])
+        plt.savefig(f'{f}-roc.png')
 
     # Need to polish this
 
 
 
-def confusion_matrix_display(y_test, y_pred):
+def confusion_matrix_display(y_test, y_pred, filename=None, directory=None):
     # inputs: actual labels & prediction labels
     tn, fp, fn, tp = confusion_matrix(y_test, y_pred).ravel()
 
     cm = confusion_matrix(y_test, y_pred)     # labels=clf.classes_
     disp = ConfusionMatrixDisplay(confusion_matrix = cm)     # display_labels=clf.classes_
     disp.plot()
+    if filename is None:
+        filename = ""
     plt.title(f'{filename[10:-4]} Confusion Matrix')     # test_data/test_1012.csv --> test_1012
     plt.show()
 
-    # save plot to directory
-    f = os.path.join(directory, filename[10:-4])
-    plt.savefig(f'{f}-confmat.png')
+    if directory is not None:
+        # save plot to directory
+        f = os.path.join(directory, filename[10:-4])
+        plt.savefig(f'{f}-confmat.png')
 
     return tn, fp, fn, tp
 
