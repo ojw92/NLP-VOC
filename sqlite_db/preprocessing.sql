@@ -1,6 +1,6 @@
 -- make the changes
 -- exynos, uk, canada(ian), german(y), australia(n)/austria(n), india(n)
-UPDATE galaxys10 SET sync = 'N' WHERE sync_time like '%11/11/2022%' AND (sync like '%y%' OR sync like '%t%') AND
+UPDATE galaxys10 SET sync = 'N' WHERE sync_time like '%12/01/2022%' AND (sync like '%y%' OR sync like '%t%') AND
 (title like '%exy%' OR description like '%exy%' OR flair like '%exy%'
 OR title like '%uk%' OR description like '%uk%'
 OR title like '%korea%' OR description like '%korea%'
@@ -8,6 +8,7 @@ OR title like '%china%' OR description like '%china%' OR title like '%chinese%' 
 OR title like '%hong kong%' OR description like '%hong kong%' OR title like '%hongkong%' OR description like '%hongkong%'
 OR title like '%hungar%' OR description like '%hungar%'
 OR title like '%canad%' OR description like '%canad%'
+OR title like '%toronto%' OR description like '%toronto%'
 OR title like '%telus%' OR description like '%telus%'  -- Canadian carrier
 OR title like '%jio%' OR description like '%jio%'  -- JIO is Indian carrier
 OR title like '%austr%' OR description like '%austr%'
@@ -21,12 +22,14 @@ OR title like '%UAE%' OR description like '%UAE%'
 OR title like '%United Arab Emirates%' OR description like '%United Arab Emirates%'
 OR title like '%indonesia%' OR description like '%indonesia%'
 OR title like '%philippines' OR description like '%philippines%'
+OR title like '%malay' OR description like '%malay%'
 OR title like '%brazil' OR description like '%brazil%'
 OR title like '%portug' OR description like '%portug%'
 OR title like '%israel' OR description like '%israel%'
 OR title like '%luxembourg' OR description like '%luxembourg%'
 OR title like '%bangladesh' OR description like '%bangladesh%'
 OR title like '%bangkok' OR description like '%bangkok%'
+OR title like '%singapor' OR description like '%singapor%'
 OR title like '%egypt' OR description like '%egypt%'
 OR title like '%London' OR description like '%London%'
 OR title like '%£%' OR description like '%£%' OR title like '%€%' OR description like '%€%'
