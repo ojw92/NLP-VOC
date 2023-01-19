@@ -3,12 +3,13 @@
 Hello!
 
 
-This repository stores (lots of) notes, project files and data files that I have used to teach myself about natural language processing (NLP) for text classification.
+This repository contains notes and project files that I used to teach myself natural language processing (NLP) for text classification.
 
 Some of the concepts covered in the notes and projects of this repository include:
 
     * NLP & sentiment analysis
     * data preparation (preprocessing) for NLP
+    * BERT
     * word embeddings
     * convolutional neural network (CNN)
     * recurrent neural network (RNN)
@@ -23,6 +24,7 @@ Some of the concepts covered in the notes and projects of this repository includ
 This will mainly serve as a backup folder for my ongoing projects and notes I will be taking from learning new skills related to NLP. But I hope that it can also help others who are also on a journey to become better data scientists!
 
 Thank you!
+
 
 
 P.S.
