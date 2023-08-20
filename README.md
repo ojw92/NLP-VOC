@@ -9,7 +9,7 @@ Some of the concepts covered in the notes and projects of this repository includ
 
     * NLP & sentiment analysis
     * data preparation (preprocessing) for NLP
-    * BERT
+    * BERT & its variants
     * word embeddings
     * convolutional neural network (CNN)
     * recurrent neural network (RNN)
