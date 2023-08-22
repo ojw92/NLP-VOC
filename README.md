@@ -1,14 +1,13 @@
 # NLP-for-Text-Classification
 
-Hello!
+This repository contains notes and project files related to natural language processing (NLP) for sentiment analysis / text classification.
 
+Please refer to BERT_VOC.ipynb for the updated version of the classification model.
 
-This repository contains notes and project files that I used to teach myself natural language processing (NLP) for text classification.
-
-Some of the concepts covered in the notes and projects of this repository include:
+Some of the concepts utilized in the project files and covered in the notes include:
 
     * NLP & sentiment analysis
-    * data preparation (preprocessing) for NLP
+    * data cleaning (preprocessing) for NLP
     * BERT & its variants
     * word embeddings
     * convolutional neural network (CNN)
@@ -21,14 +20,10 @@ Some of the concepts covered in the notes and projects of this repository includ
     * Random forest
     * ... and much more!
 
-This will mainly serve as a backup folder for my ongoing projects and notes I will be taking from learning new skills related to NLP. But I hope that it can also help others who are also on a journey to become better data scientists!
+This will mainly serve as a backup folder for my ongoing projects and notes I will be taking from learning new skills related to NLP. More updates to come.
 
-Thank you!
-
-
-
-P.S.
-Currently, there are lots of unorganized code blocks that I have written for just myself to understand concepts and test functions for my project.
-I will be cleaning these code blocks and uploading them in parts over time in order to create a more pleasant reading & learning experience for myself and my potential audience.
 If there are any questions or suggestions for improving this repository, please do not hesitate to contact me at joh15@illinois.edu.
-Thank you!
+
+
+Thank you.
+
