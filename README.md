@@ -1,6 +1,6 @@
 # NLP-for-Text-Classification
 
-This repository contains notes and project files related to natural language processing (NLP) for sentiment analysis / text classification.
+This repository contains personal project files and notes related to natural language processing (NLP) for sentiment analysis / text classification.
 
 Please refer to BERT_VOC.ipynb for the updated version of the classification model.
 
