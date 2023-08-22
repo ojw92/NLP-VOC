@@ -18,9 +18,7 @@ Some of the concepts utilized in the project files and covered in the notes incl
     * Word2Vec
     * CART
     * Random forest
-    * ... and much more!
-
-This will mainly serve as a backup folder for my ongoing projects and notes I will be taking from learning new skills related to NLP. More updates to come.
+    * ... and much more
 
 If there are any questions or suggestions for improving this repository, please do not hesitate to contact me at joh15@illinois.edu.
 
