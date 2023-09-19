@@ -3,6 +3,7 @@
 This repository contains personal project files and notes related to natural language processing (NLP) for sentiment analysis / text classification.
 
 Please refer to train.ipynb & test.ipynb for the updated version of the classification model.
+vocdashboardsnap.png shows a snapshot of the Power BI dashboard created with dummy VOC data
 
 Some of the concepts utilized in the project files and covered in the notes include:
 
