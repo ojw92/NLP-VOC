@@ -1,9 +1,10 @@
 # NLP-for-Text-Classification
 
-This repository contains personal project files and notes related to natural language processing (NLP) for sentiment analysis / text classification.
+This repository contains personal project files and notes on sentiment analysis / text classification.
 
-Please refer to train.ipynb & test.ipynb for the updated version of the classification model.
-vocdashboardsnap.png shows a snapshot of the Power BI dashboard created with dummy VOC data
+Please refer to **train.ipynb** & **test.ipynb** for the updated version of the classification model.
+**vocdashboardsnap.png** shows a snapshot of the Power BI dashboard created with VOC data (altered, dummy data)
+
 
 Some of the concepts utilized in the project files and covered in the notes include:
 
@@ -20,6 +21,7 @@ Some of the concepts utilized in the project files and covered in the notes incl
     * CART
     * Random forest
     * ... and much more
+
 
 If there are any questions or suggestions for improving this repository, please do not hesitate to contact me at joh15@illinois.edu.
 
