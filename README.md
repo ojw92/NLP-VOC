@@ -6,7 +6,7 @@ Please refer to **train.ipynb** & **test.ipynb** for the updated version of the 
 **vocdashboardsnap.png** shows a snapshot of the Power BI dashboard created with VOC data (altered, dummy data)
 
 
-Some of the concepts utilized in the project files and covered in the notes include:
+Some of the algorithms and analytical methods utilized in the project files and the notes include:
 
     * NLP & sentiment analysis
     * data cleaning (preprocessing) for NLP
